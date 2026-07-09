@@ -34,9 +34,18 @@ export default function DashboardPage() {
   if (!user)
     return (
       <main className="page">
-        <div className="card">Loading your dashboard…</div>
+        <div className="card loading-card" role="status">
+          <span className="spinner" aria-hidden="true" />
+          <span>Loading your dashboard…</span>
+        </div>
       </main>
     );
+  const initials = user.name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
   return (
     <div className="shell">
       <header className="topbar">
@@ -46,11 +55,16 @@ export default function DashboardPage() {
           </span>{' '}
           Canvas
         </div>
-        <div className="row">
-          <span className="badge">{user.role}</span>
-          <span>{user.name}</span>
+        <div className="user-menu">
+          <span className="avatar" aria-hidden="true">
+            {initials}
+          </span>
+          <div className="user-copy">
+            <strong>{user.name}</strong>
+            <span>{user.role} account</span>
+          </div>
           <button
-            className="button ghost"
+            className="button ghost icon-button"
             onClick={logout}
             aria-label="Sign out"
           >
@@ -59,7 +73,11 @@ export default function DashboardPage() {
         </div>
       </header>
       <main className="page">
-        {error && <div className="error">{error}</div>}
+        {error && (
+          <div className="error" role="alert">
+            {error}
+          </div>
+        )}
         {user.role === 'admin' && <AdminDashboard user={user} />}
         {user.role === 'teacher' && <TeacherDashboard user={user} />}
         {user.role === 'student' && <StudentDashboard user={user} />}

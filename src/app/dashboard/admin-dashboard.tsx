@@ -1,5 +1,6 @@
 'use client';
 
+import { GraduationCap, Layers3, UserPlus, UsersRound } from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import type { SessionUser, UserRole, UserStatus } from '@/shared/contracts';
 import { api } from '@/lib/api';
@@ -162,29 +163,54 @@ export function AdminDashboard({ user }: { user: SessionUser }) {
     users.filter((item) => item.role === role).length;
   return (
     <>
-      <p className="eyebrow">School administration</p>
-      <h1>Good afternoon, {user.name.split(' ')[0]}.</h1>
-      <p className="muted">Manage people and teaching teams from one place.</p>
+      <header className="page-header">
+        <p className="eyebrow">School administration</p>
+        <h1>Good afternoon, {user.name.split(' ')[0]}.</h1>
+        <p className="muted">
+          Manage people and teaching teams from one place.
+        </p>
+      </header>
       {error && <div className="error section">{error}</div>}
       <section className="grid-3 section grid">
-        <div className="card">
-          <span className="muted">Teachers</span>
-          <div className="stat">{counts('teacher')}</div>
+        <div className="card stat-card green">
+          <span className="stat-icon">
+            <GraduationCap size={23} />
+          </span>
+          <div>
+            <span className="stat-label">Teachers</span>
+            <div className="stat">{counts('teacher')}</div>
+          </div>
         </div>
-        <div className="card">
-          <span className="muted">Students</span>
-          <div className="stat">{counts('student')}</div>
+        <div className="card stat-card navy">
+          <span className="stat-icon">
+            <UsersRound size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Students</span>
+            <div className="stat">{counts('student')}</div>
+          </div>
         </div>
-        <div className="card">
-          <span className="muted">Teacher groups</span>
-          <div className="stat">
-            {new Set(groups.map((group) => group.id)).size}
+        <div className="card stat-card gold">
+          <span className="stat-icon">
+            <Layers3 size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Teacher groups</span>
+            <div className="stat">
+              {new Set(groups.map((group) => group.id)).size}
+            </div>
           </div>
         </div>
       </section>
       <section className="grid-2 section grid">
         <div className="card">
-          <h2>Add a user</h2>
+          <div className="section-heading">
+            <UserPlus size={21} />
+            <div>
+              <h2>Add a user</h2>
+              <p className="meta">Create a secure school account.</p>
+            </div>
+          </div>
           <form className="form-grid" onSubmit={createUser}>
             <div className="field">
               <label htmlFor="new-name">Name</label>
@@ -216,7 +242,13 @@ export function AdminDashboard({ user }: { user: SessionUser }) {
           </form>
         </div>
         <div className="card">
-          <h2>Create a teacher group</h2>
+          <div className="section-heading">
+            <Layers3 size={21} />
+            <div>
+              <h2>Create a teacher group</h2>
+              <p className="meta">Organize teachers by team or subject.</p>
+            </div>
+          </div>
           <form className="stack" onSubmit={createGroup}>
             <div className="field">
               <label htmlFor="group-name">Group name</label>
@@ -239,7 +271,7 @@ export function AdminDashboard({ user }: { user: SessionUser }) {
                 <div className="list-item" key={group.id}>
                   <div className="row">
                     <strong>{group.name}</strong>
-                    <div className="row">
+                    <div className="action-group">
                       <button
                         className="button ghost"
                         onClick={() => renameGroup(group.id, group.name)}
@@ -285,9 +317,15 @@ export function AdminDashboard({ user }: { user: SessionUser }) {
         </div>
       </section>
       <section className="card section">
-        <div className="row">
-          <h2>People</h2>
-          <span className="muted">{users.length} total</span>
+        <div className="row section-heading">
+          <div className="section-heading compact">
+            <UsersRound size={21} />
+            <div>
+              <h2>People</h2>
+              <p className="meta">Account access and role management.</p>
+            </div>
+          </div>
+          <span className="meta">{users.length} total</span>
         </div>
         {users.map((item) => (
           <div className="row mobile-stack list-item" key={item.id}>
@@ -295,7 +333,7 @@ export function AdminDashboard({ user }: { user: SessionUser }) {
               <strong>{item.name}</strong>
               <div className="muted">{item.email}</div>
             </div>
-            <div className="row">
+            <div className="action-group">
               <span className="badge">{item.role}</span>
               <span
                 className={`badge ${item.status === 'active' ? 'success' : 'danger'}`}

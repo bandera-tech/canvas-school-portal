@@ -1,6 +1,13 @@
 'use client';
 
-import { BookOpen, Github } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  Github,
+  GraduationCap,
+  ShieldCheck,
+  UsersRound,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
 import type { SessionUser } from '@/shared/contracts';
@@ -39,15 +46,24 @@ export default function LoginPage() {
           </span>{' '}
           Canvas
         </div>
-        <div style={{ marginTop: 'auto', paddingTop: '5rem' }}>
-          <p className="eyebrow" style={{ color: '#bdeedc' }}>
-            A better school day
-          </p>
+        <div className="login-hero">
+          <p className="eyebrow">A better school day</p>
           <h1>Everything your class needs, in one calm place.</h1>
           <p>
             Teach, learn, submit work, and stay connected without digging
             through five different tools.
           </p>
+          <div className="feature-list" aria-label="Portal features">
+            <span className="feature-pill">
+              <GraduationCap size={16} /> Focused learning
+            </span>
+            <span className="feature-pill">
+              <UsersRound size={16} /> Connected classes
+            </span>
+            <span className="feature-pill">
+              <ShieldCheck size={16} /> Secure by design
+            </span>
+          </div>
         </div>
       </section>
       <section className="login-panel">
@@ -85,13 +101,11 @@ export default function LoginPage() {
             </div>
             <button className="button" disabled={loading}>
               {loading ? 'Signing in…' : 'Sign in'}
+              {!loading && <ArrowRight size={17} />}
             </button>
           </form>
-          <a
-            className="button secondary row"
-            style={{ justifyContent: 'center', textDecoration: 'none' }}
-            href="/api/auth/github"
-          >
+          <div className="oauth-divider">or continue with</div>
+          <a className="button secondary" href="/api/auth/github">
             <Github size={17} /> Continue with GitHub
           </a>
           <div className="demo-note">

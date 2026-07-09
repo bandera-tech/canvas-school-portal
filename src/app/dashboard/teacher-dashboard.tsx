@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  BookOpenText,
+  CheckCircle2,
+  ClipboardCheck,
+  Clock3,
+  FolderPlus,
+  School,
+} from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import type { SessionUser } from '@/shared/contracts';
 import { api } from '@/lib/api';
@@ -173,31 +181,54 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
   }
   return (
     <>
-      <p className="eyebrow">Teacher workspace</p>
-      <h1>Welcome back, {user.name.split(' ')[0]}.</h1>
-      <p className="muted">
-        Your classes, publishing tools, and grading queue.
-      </p>
+      <header className="page-header">
+        <p className="eyebrow">Teacher workspace</p>
+        <h1>Welcome back, {user.name.split(' ')[0]}.</h1>
+        <p className="muted">
+          Your classes, publishing tools, and grading queue.
+        </p>
+      </header>
       {error && <div className="error section">{error}</div>}
       <section className="grid-3 section grid">
-        <div className="card">
-          <span className="muted">Classes</span>
-          <div className="stat">{classes.length}</div>
+        <div className="card stat-card green">
+          <span className="stat-icon">
+            <School size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Classes</span>
+            <div className="stat">{classes.length}</div>
+          </div>
         </div>
-        <div className="card">
-          <span className="muted">Submissions</span>
-          <div className="stat">{submissions.length}</div>
+        <div className="card stat-card navy">
+          <span className="stat-icon">
+            <ClipboardCheck size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Submissions</span>
+            <div className="stat">{submissions.length}</div>
+          </div>
         </div>
-        <div className="card">
-          <span className="muted">Needs grading</span>
-          <div className="stat">
-            {submissions.filter((item) => item.grade === null).length}
+        <div className="card stat-card gold">
+          <span className="stat-icon">
+            <Clock3 size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Needs grading</span>
+            <div className="stat">
+              {submissions.filter((item) => item.grade === null).length}
+            </div>
           </div>
         </div>
       </section>
       <section className="grid-2 section grid">
         <div className="card">
-          <h2>Create a class</h2>
+          <div className="section-heading">
+            <FolderPlus size={21} />
+            <div>
+              <h2>Create a class</h2>
+              <p className="meta">Start a focused space for your students.</p>
+            </div>
+          </div>
           <form className="stack" onSubmit={createClass}>
             <div className="field">
               <label htmlFor="class-name">Class name</label>
@@ -211,23 +242,29 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
           </form>
         </div>
         <div className="card">
-          <h2>Your classes</h2>
+          <div className="section-heading">
+            <School size={21} />
+            <div>
+              <h2>Your classes</h2>
+              <p className="meta">Choose a class to publish coursework.</p>
+            </div>
+          </div>
           {classes.length === 0 ? (
             <div className="empty">Create your first class.</div>
           ) : (
             classes.map((item) => (
               <div className="row mobile-stack list-item" key={item.id}>
                 <button
-                  className="button ghost"
-                  style={{ textAlign: 'left', flex: 1 }}
+                  className={`button ghost class-select-button ${selected === item.id ? 'selected-class' : ''}`}
                   onClick={() => setSelected(item.id)}
+                  aria-pressed={selected === item.id}
                 >
                   <strong>{item.name}</strong>
                   <div className="muted">
                     {item.description || 'No description'}
                   </div>
                 </button>
-                <div className="row">
+                <div className="action-group">
                   <button
                     className="button secondary"
                     onClick={() => renameClass(item)}
@@ -266,7 +303,10 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
           </div>
           <div className="grid-2 section grid">
             <form className="stack" onSubmit={createLesson}>
-              <h3>Publish lesson</h3>
+              <div className="section-heading compact">
+                <BookOpenText size={20} />
+                <h3>Publish lesson</h3>
+              </div>
               <div className="field">
                 <label htmlFor="lesson-title">Title</label>
                 <input id="lesson-title" name="title" required />
@@ -278,7 +318,10 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
               <button className="button">Publish lesson</button>
             </form>
             <form className="stack" onSubmit={createAssignment}>
-              <h3>Publish assignment</h3>
+              <div className="section-heading compact">
+                <ClipboardCheck size={20} />
+                <h3>Publish assignment</h3>
+              </div>
               <div className="field">
                 <label htmlFor="assignment-title">Title</label>
                 <input id="assignment-title" name="title" required />
@@ -306,12 +349,18 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
         </section>
       )}
       <section className="card section">
-        <h2>Grading queue</h2>
+        <div className="section-heading">
+          <CheckCircle2 size={21} />
+          <div>
+            <h2>Grading queue</h2>
+            <p className="meta">Review submissions and leave clear feedback.</p>
+          </div>
+        </div>
         {submissions.length === 0 ? (
           <div className="empty">No submissions yet.</div>
         ) : (
           submissions.map((item) => (
-            <div className="list-item" key={item.id}>
+            <div className="content-item" key={item.id}>
               <div className="row mobile-stack">
                 <div>
                   <strong>
@@ -337,8 +386,9 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
                 onSubmit={(event) => grade(event, item.id)}
               >
                 <div className="field">
-                  <label>Grade</label>
+                  <label htmlFor={`grade-${item.id}`}>Grade</label>
                   <input
+                    id={`grade-${item.id}`}
                     name="grade"
                     type="number"
                     min="0"
@@ -348,8 +398,12 @@ export function TeacherDashboard({ user }: { user: SessionUser }) {
                   />
                 </div>
                 <div className="field">
-                  <label>Feedback</label>
-                  <input name="feedback" defaultValue={item.feedback ?? ''} />
+                  <label htmlFor={`feedback-${item.id}`}>Feedback</label>
+                  <input
+                    id={`feedback-${item.id}`}
+                    name="feedback"
+                    defaultValue={item.feedback ?? ''}
+                  />
                 </div>
                 <button className="button span-2">Save grade</button>
               </form>

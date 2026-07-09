@@ -1,5 +1,12 @@
 'use client';
 
+import {
+  Award,
+  BookOpenCheck,
+  BookOpenText,
+  ClipboardList,
+  GraduationCap,
+} from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import type { SessionUser } from '@/shared/contracts';
 import { api } from '@/lib/api';
@@ -82,34 +89,57 @@ export function StudentDashboard({ user }: { user: SessionUser }) {
   ];
   return (
     <>
-      <p className="eyebrow">Student dashboard</p>
-      <h1>Hi, {user.name.split(' ')[0]}.</h1>
-      <p className="muted">Here is what is happening across your classes.</p>
+      <header className="page-header">
+        <p className="eyebrow">Student dashboard</p>
+        <h1>Hi, {user.name.split(' ')[0]}.</h1>
+        <p className="muted">Here is what is happening across your classes.</p>
+      </header>
       {error && <div className="error section">{error}</div>}
       <section className="grid-3 section grid">
-        <div className="card">
-          <span className="muted">Classes</span>
-          <div className="stat">{classes.length}</div>
+        <div className="card stat-card green">
+          <span className="stat-icon">
+            <GraduationCap size={23} />
+          </span>
+          <div>
+            <span className="stat-label">Classes</span>
+            <div className="stat">{classes.length}</div>
+          </div>
         </div>
-        <div className="card">
-          <span className="muted">Assignments</span>
-          <div className="stat">{assignments.length}</div>
+        <div className="card stat-card navy">
+          <span className="stat-icon">
+            <ClipboardList size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Assignments</span>
+            <div className="stat">{assignments.length}</div>
+          </div>
         </div>
-        <div className="card">
-          <span className="muted">Graded</span>
-          <div className="stat">
-            {assignments.filter((item) => item.grade !== null).length}
+        <div className="card stat-card gold">
+          <span className="stat-icon">
+            <Award size={22} />
+          </span>
+          <div>
+            <span className="stat-label">Graded</span>
+            <div className="stat">
+              {assignments.filter((item) => item.grade !== null).length}
+            </div>
           </div>
         </div>
       </section>
       <section className="grid-2 section grid">
         <div className="card">
-          <h2>My classes</h2>
+          <div className="section-heading">
+            <BookOpenCheck size={21} />
+            <div>
+              <h2>My classes</h2>
+              <p className="meta">The spaces where your learning happens.</p>
+            </div>
+          </div>
           {classes.length === 0 ? (
             <div className="empty">You are not enrolled in a class yet.</div>
           ) : (
             classes.map((item) => (
-              <div className="list-item" key={item.id}>
+              <div className="content-item" key={item.id}>
                 <strong>{item.name}</strong>
                 <div className="muted">{item.teacherName}</div>
                 <p>{item.description}</p>
@@ -118,14 +148,20 @@ export function StudentDashboard({ user }: { user: SessionUser }) {
           )}
         </div>
         <div className="card">
-          <h2>Published lessons</h2>
+          <div className="section-heading">
+            <BookOpenText size={21} />
+            <div>
+              <h2>Published lessons</h2>
+              <p className="meta">Recent material from your teachers.</p>
+            </div>
+          </div>
           {lessons.length === 0 ? (
             <div className="empty">No lessons published yet.</div>
           ) : (
             lessons.map((item) => (
-              <div className="list-item" key={item.lessonId}>
+              <div className="content-item" key={item.lessonId}>
                 <span className="badge">{item.className}</span>
-                <h3 style={{ marginTop: '.6rem' }}>{item.lessonTitle}</h3>
+                <h3 className="content-title">{item.lessonTitle}</h3>
                 <p>{item.lessonContent}</p>
               </div>
             ))
@@ -133,16 +169,24 @@ export function StudentDashboard({ user }: { user: SessionUser }) {
         </div>
       </section>
       <section className="card section">
-        <h2>Assignments and grades</h2>
+        <div className="section-heading">
+          <ClipboardList size={21} />
+          <div>
+            <h2>Assignments and grades</h2>
+            <p className="meta">
+              Submit your work and follow teacher feedback.
+            </p>
+          </div>
+        </div>
         {assignments.length === 0 ? (
           <div className="empty">No assignments are due.</div>
         ) : (
           assignments.map((item) => (
-            <div className="list-item" key={item.assignmentId}>
+            <div className="content-item" key={item.assignmentId}>
               <div className="row mobile-stack">
                 <div>
                   <span className="badge">{item.className}</span>
-                  <h3 style={{ marginTop: '.6rem' }}>{item.assignmentTitle}</h3>
+                  <h3 className="content-title">{item.assignmentTitle}</h3>
                   <p>{item.assignmentDescription}</p>
                   {item.dueAt && (
                     <div className="muted">
@@ -163,12 +207,24 @@ export function StudentDashboard({ user }: { user: SessionUser }) {
                   onSubmit={(event) => submit(event, item.assignmentId!)}
                 >
                   <div className="field">
-                    <label>Written response</label>
-                    <textarea name="content" />
+                    <label htmlFor={`response-${item.assignmentId}`}>
+                      Written response
+                    </label>
+                    <textarea
+                      id={`response-${item.assignmentId}`}
+                      name="content"
+                    />
                   </div>
                   <div className="field">
-                    <label>Supporting link</label>
-                    <input name="linkUrl" type="url" placeholder="https://" />
+                    <label htmlFor={`link-${item.assignmentId}`}>
+                      Supporting link
+                    </label>
+                    <input
+                      id={`link-${item.assignmentId}`}
+                      name="linkUrl"
+                      type="url"
+                      placeholder="https://"
+                    />
                   </div>
                   <button className="button span-2">
                     {item.submissionId
