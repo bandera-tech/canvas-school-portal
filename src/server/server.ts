@@ -5,6 +5,7 @@ import { buildApi } from './app.js';
 import { getConfig } from './config.js';
 import { createDatabase } from './database/client.js';
 import { migrateToLatest } from './database/migrate.js';
+import { seedDatabase } from './database/seed.js';
 
 const config = getConfig();
 const db = createDatabase(config.DATABASE_URL);
@@ -27,6 +28,7 @@ const web = createNext({
 });
 
 await migrateToLatest(db);
+if (config.SEED_DEMO_DATA) await seedDatabase(db, config);
 await web.prepare();
 const app = await buildApi({ db, redis, config });
 const handle = web.getRequestHandler();

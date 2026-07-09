@@ -19,6 +19,8 @@ services:
         sync: false
       - key: GITHUB_CLIENT_SECRET
         sync: false
+      - key: SEED_DEMO_DATA
+        value: 'true'
       - key: DEMO_ADMIN_PASSWORD
         sync: false
       - key: DEMO_TEACHER_PASSWORD

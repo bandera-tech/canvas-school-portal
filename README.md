@@ -79,7 +79,7 @@ Pure authentication, validation, and error modules enforce 100% line, branch, fu
 
 ## Deployment
 
-`render.yaml` deploys the Docker image to Render. Create free Neon and Upstash databases, then set `DATABASE_URL`, `REDIS_URL`, `APP_URL`, GitHub OAuth values, and demo passwords in Render. The GitHub callback is:
+`render.yaml` deploys the Docker image to Render. Create free Neon and Upstash databases, then set `DATABASE_URL`, `REDIS_URL`, `APP_URL`, GitHub OAuth values, and demo passwords in Render. Set `SEED_DEMO_DATA=true` only on demo deployments; the idempotent seed runs after migrations at startup. The GitHub callback is:
 
 ```text
 https://YOUR-RENDER-HOST/api/auth/github/callback

@@ -11,6 +11,10 @@ const configSchema = z.object({
   APP_URL: z.string().url().default('http://localhost:3000'),
   GITHUB_CLIENT_ID: z.string().default(''),
   GITHUB_CLIENT_SECRET: z.string().default(''),
+  SEED_DEMO_DATA: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
   DEMO_ADMIN_PASSWORD: z.string().min(8).default('AdminDemo123!'),
   DEMO_TEACHER_PASSWORD: z.string().min(8).default('TeacherDemo123!'),
   DEMO_STUDENT_PASSWORD: z.string().min(8).default('StudentDemo123!'),
