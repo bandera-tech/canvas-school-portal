@@ -14,6 +14,11 @@ declare module 'jsonwebtoken' {
     secret: string,
     options?: { issuer?: string; audience?: string }
   ): unknown;
+  const jwt: {
+    sign: typeof sign;
+    verify: typeof verify;
+  };
+  export default jwt;
 }
 
 declare module 'pg' {

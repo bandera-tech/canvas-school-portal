@@ -1,5 +1,7 @@
-import { sign, verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+
+const { sign, verify } = jwt;
 
 const claimsSchema = z.object({
   sub: z.string().uuid(),
