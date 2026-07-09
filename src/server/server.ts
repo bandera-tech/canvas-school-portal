@@ -1,5 +1,6 @@
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import { Redis } from 'ioredis';
-import { NextServer } from 'next/dist/server/next.js';
+import nextFactory from 'next';
 import { buildApi } from './app.js';
 import { getConfig } from './config.js';
 import { createDatabase } from './database/client.js';
@@ -8,7 +9,19 @@ import { migrateToLatest } from './database/migrate.js';
 const config = getConfig();
 const db = createDatabase(config.DATABASE_URL);
 const redis = new Redis(config.REDIS_URL, { maxRetriesPerRequest: 2 });
-const web = new NextServer({
+interface NextApplication {
+  prepare(): Promise<void>;
+  getRequestHandler(): (
+    request: IncomingMessage,
+    response: ServerResponse
+  ) => Promise<void>;
+}
+
+const createNext = nextFactory as unknown as (options: {
+  dev: boolean;
+  dir: string;
+}) => NextApplication;
+const web = createNext({
   dev: config.NODE_ENV !== 'production',
   dir: process.cwd(),
 });
