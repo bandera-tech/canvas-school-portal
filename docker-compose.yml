@@ -1,4 +1,25 @@
 services:
+  app:
+    build: .
+    container_name: canvas-school-portal
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      APP_URL: http://localhost:3000
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/concentrate-quiz
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: local-development-secret-change-before-production
+      DEMO_ADMIN_PASSWORD: AdminDemo123!
+      DEMO_TEACHER_PASSWORD: TeacherDemo123!
+      DEMO_STUDENT_PASSWORD: StudentDemo123!
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
   postgres:
     image: postgres:17-alpine
     container_name: concentrate-quiz-db

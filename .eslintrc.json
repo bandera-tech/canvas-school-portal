@@ -1,5 +1,6 @@
 {
   "root": true,
+  "ignorePatterns": ["next-env.d.ts", ".next/", "dist/", "coverage/"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2022,
