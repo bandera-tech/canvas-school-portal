@@ -39,7 +39,7 @@ suite('HTTP API', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    if (app) await app.close();
     await redis.quit();
     await db.destroy();
   });
