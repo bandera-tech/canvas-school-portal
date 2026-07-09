@@ -29,7 +29,7 @@ docker compose exec app node dist/server/database/cli.js seed
 
 ### Hosted services or local Node
 
-Node 20+ and pnpm 11 are required. Copy `.env.example` to `.env`, point `DATABASE_URL` and `REDIS_URL` at Neon/Upstash or local services, then run:
+Node 20+ and pnpm 10 are required. Copy `.env.example` to `.env`, point `DATABASE_URL` and `REDIS_URL` at Neon/Upstash or local services, then run:
 
 ```bash
 corepack enable

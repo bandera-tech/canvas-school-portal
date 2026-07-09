@@ -77,5 +77,5 @@
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
   },
-  "packageManager": "pnpm@11.7.0"
+  "packageManager": "pnpm@10.15.1"
 }
